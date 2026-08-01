@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
-!pip install streamlit
+#!pip install streamlit
 import streamlit as st
 
 import yfinance as yf
