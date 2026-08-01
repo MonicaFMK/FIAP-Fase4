@@ -14,7 +14,10 @@ import pandas as pd
 
 dados = pd.read_csv('https://raw.githubusercontent.com/MonicaFMK/FIAP-Fase4/refs/heads/main/Obesity.csv')
 
-st.write('#DADOS OBESITY')
+st.write('# DADOS OBESITY')
 
 st.write('### Idade')
 input_idade = float(st.slider('Selecione a idade',14,100))
+
+st.write('### Gênero')
+input_genero = st.selectbox('Qual o gênero?'dados['Gender'].unique())
