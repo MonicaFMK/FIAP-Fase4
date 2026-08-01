@@ -26,4 +26,4 @@ st.write('### Obesity Type')
 input_obesity = st.selectbox('Qual o Obesity Type?',dados['Obesity'].unique())
 
 st.write('### Frequência semanal de atividade física')
-input_atividade_fisica = float(st.slider('Qual a frequência semanal de atividade física?',0,7)
+input_atividade_fisica = float(st.slider('Qual a frequência semanal de atividade física?',0,7))
