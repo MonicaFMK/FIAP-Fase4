@@ -21,3 +21,9 @@ input_idade = float(st.slider('Selecione a idade',14,100))
 
 st.write('### Gênero')
 input_genero = st.selectbox('Qual o gênero?',dados['Gender'].unique())
+
+st.write('### Obesity Type')
+input_obesity = st.selectbox('Qual o Obesity Type?',dados['Obesity'].unique())
+
+st.write('### Frequência semanal de atividade física')
+input_atividade_fisica = float(st.slider('Qual a frequência semanal de atividade física?',0,7)
