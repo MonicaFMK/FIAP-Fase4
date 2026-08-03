@@ -28,8 +28,8 @@ input_altura = float(st.number_input('Digite a altura e pressione ENTER para con
 st.write('### Peso')
 input_peso = float(st.number_input('Digite o peso e pressione ENTER para confirmar',0))
 
-st.write('### Histórico familiar')
-input_historico_familiar = st.radio('Possui histórico familiar?', ['Sim','Não'])
+#st.write('### Histórico familiar')
+input_historico_familiar = st.radio('### Possui histórico familiar?', ['Sim','Não'])
 input_historico_familiar_dict = {'Sim':'yes','Não':'no'}
 input_historico_familiar = input_historico_familiar_dict.get(input_historico_familiar)
 
