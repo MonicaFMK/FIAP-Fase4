@@ -12,18 +12,34 @@ Original file is located at
 import streamlit as st
 import pandas as pd
 
-dados = pd.read_csv('https://raw.githubusercontent.com/MonicaFMK/FIAP-Fase4/refs/heads/main/Obesity.csv')
+dados = pd.read_csv('https://raw.githubusercontent.com/MonicaFMK/FIAP-Fase4/refs/heads/main/Obesity-formatado-LIMPO.csv')
 
 st.write('# DADOS OBESITY')
-
-st.write('### Idade')
-input_idade = float(st.slider('Selecione a idade',14,100))
 
 st.write('### Gênero')
 input_genero = st.selectbox('Qual o gênero?',dados['Gender'].unique())
 
-st.write('### Obesity Type')
-input_obesity = st.selectbox('Qual o Obesity Type?',dados['Obesity'].unique())
+st.write('### Idade')
+input_idade = float(st.slider('Selecione a idade',14,100))
 
-st.write('### Frequência semanal de atividade física')
-input_atividade_fisica = float(st.slider('Qual a frequência semanal de atividade física?',0,7))
+st.write('### Altura')
+input_altura = float(st.number_input('Digite a altura e pressione ENTER para confirmar',0))
+
+st.write('### Peso')
+input_peso = float(st.number_input('Digite o peso e pressione ENTER para confirmar',0))
+
+st.write('### Histórico familiar')
+input_historico_familiar = st.radio('Possui histórico familiar?', ['Sim','Não'])
+input_historico_familiar_dict = {'Sim':'yes','Não':'no'}
+input_historico_familiar = input_historico_familiar_dict.get(input_historico_familiar)
+
+st.write('### Consumo frequente de alimentos muito calóricos')
+input_consumo_calorico = st.radio('Possui histórico familiar?', ['Sim','Não'])
+input_consumo_calorico_dict = {'Sim':'yes','Não':'no'}
+input_consumo_calorico = input_consumo_calorico_dict.get(input_consumo_calorico)
+
+st.write('### Frequência de consumo de vegetais nas refeições')
+input_consumo_vegetais = st.radio('Frequência de consumo de vegetais nas refeições', ['1 raramente','2 às vezes','3 sempre'])
+input_consumo_vegetais_dict = {'1 raramente':1,'2 às vezes':2,'3 sempre':3}
+input_consumo_vegetais = input_consumo_vegetais_dict.get(input_consumo_vegetais)
+
