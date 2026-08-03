@@ -34,7 +34,7 @@ input_historico_familiar_dict = {'Sim':'yes','Não':'no'}
 input_historico_familiar = input_historico_familiar_dict.get(input_historico_familiar)
 
 st.write('### Consumo frequente de alimentos muito calóricos')
-input_consumo_calorico = st.radio('Possui histórico familiar?', ['Sim','Não'])
+input_consumo_calorico = st.radio('Consumo frequente de alimentos muito calóricos?', ['Sim','Não'])
 input_consumo_calorico_dict = {'Sim':'yes','Não':'no'}
 input_consumo_calorico = input_consumo_calorico_dict.get(input_consumo_calorico)
 
