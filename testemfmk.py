@@ -28,18 +28,30 @@ input_altura = float(st.number_input('Digite a altura e pressione ENTER para con
 st.write('### Peso')
 input_peso = float(st.number_input('Digite o peso e pressione ENTER para confirmar',0))
 
-#st.write('### Histórico familiar')
-input_historico_familiar = st.radio('### Possui histórico familiar?', ['Sim','Não'])
+st.write('### Histórico familiar')
+input_historico_familiar = st.radio('Possui histórico familiar?', ['Sim','Não'])
 input_historico_familiar_dict = {'Sim':'yes','Não':'no'}
 input_historico_familiar = input_historico_familiar_dict.get(input_historico_familiar)
 
-st.write('### Consumo frequente de alimentos muito calóricos')
+st.write('### Alimentos muito calóricos')
 input_consumo_calorico = st.radio('Consumo frequente de alimentos muito calóricos?', ['Sim','Não'])
 input_consumo_calorico_dict = {'Sim':'yes','Não':'no'}
 input_consumo_calorico = input_consumo_calorico_dict.get(input_consumo_calorico)
 
-st.write('### Frequência de consumo de vegetais nas refeições')
-input_consumo_vegetais = st.radio('Frequência de consumo de vegetais nas refeições', ['1 raramente','2 às vezes','3 sempre'])
-input_consumo_vegetais_dict = {'1 raramente':1,'2 às vezes':2,'3 sempre':3}
+st.write('### Vegetais nas refeições')
+input_consumo_vegetais = st.radio('Frequência de consumo de vegetais nas refeições', ['1 - raramente','2 - às vezes','3 - sempre'])
+input_consumo_vegetais_dict = {'1 - raramente':1,'2 - às vezes':2,'3 - sempre':3}
 input_consumo_vegetais = input_consumo_vegetais_dict.get(input_consumo_vegetais)
 
+st.write('### Refeições')
+input_refeicoes = st.radio('Número de refeições principais por dia', [1,2,3,4])
+
+st.write('### Lanches')
+input_Lanches = st.radio('Consumo de lanches/comes entre as refeições', ['não consome','às vezes','frequentemente','sempre'])
+input_consumo_Lanches_dict = {'não consome':'no','às vezes':'Sometimes','frequentemente':'Frequently','sempre':'Always'}
+input_consumo_Lanches = input_consumo_Lanches_dict.get(input_Lanches)
+
+st.write('### Smoke')
+input_Smoke = st.radio('Hábito de fumar?', ['Sim','Não'])
+input_Smoke_dict = {'Sim':'yes','Não':'no'}
+input_Smoke = input_Smoke_dict.get(input_Smoke)
