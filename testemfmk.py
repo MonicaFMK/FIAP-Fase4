@@ -55,3 +55,50 @@ st.write('### Smoke')
 input_Smoke = st.radio('Hábito de fumar?', ['Sim','Não'])
 input_Smoke_dict = {'Sim':'yes','Não':'no'}
 input_Smoke = input_Smoke_dict.get(input_Smoke)
+
+st.write('### Água')
+input_agua = st.radio('Consumo diário de água (L/dia).', [1,2,3])
+
+st.write('### Ingestão calórica')
+input_calorica = st.radio('Monitora a ingestão calórica diária?', ['Sim','Não'])
+input_calorica_dict = {'Sim':'yes','Não':'no'}
+input_calorica = input_calorica_dict.get(input_calorica)
+
+st.write('### Atividade física')
+input_atividade = st.radio('Frequência semanal de atividade física', ['nenhuma','1–2×/sem','3–4×/sem',' 5×/sem ou mais'])
+input_atividade_dict = {'nenhuma':0,'1–2×/sem':1,'3–4×/sem':2,'5×/sem ou mais':3}
+input_atividade = input_atividade_dict.get(input_atividade)
+
+st.write('### Eletrônicos')
+input_tempo_eletronico = st.radio('Tempo diário usando dispositivos eletrônicos', ['0–2 h/dia','3–5 h/dia','> 5 h/dia'])
+input_tempo_eletronico_dict = {'0–2 h/dia':0,'3–5 h/dia':1,'> 5 h/dia':2}
+input_tempo_eletronico = input_tempo_eletronico_dict.get(input_tempo_eletronico)
+
+st.write('### Bebidas alcólicas')
+input_Bebidas = st.radio('Consumo de bebida alcoólica', ['não bebe','às vezes','frequentemente','sempre'])
+input_Bebidas_dict = {'não bebe':'no','às vezes':'Sometimes','frequentemente':'Frequently','sempre':'Always'}
+input_Bebidas = input_Bebidas_dict.get(input_Bebidas)
+
+st.write('### Meio de transporte')
+input_transporte = st.radio('Meio de transporte habitual', ['carro','moto','bicicleta','transporte público','a pé'])
+input_transporte_dict = {'carro':'Automobile','moto':'Motorbike','bicicleta':'Bike','transporte público':'Public_Transportation','a pé':'Walking'}
+input_transporte = input_transporte_dict.get(input_transporte)
+
+novo_dado = [
+    input_genero,
+    input_idade,
+    input_altura,
+    input_peso,
+    input_historico_familiar,
+    input_consumo_calorico,
+    input_consumo_vegetais,
+    input_refeicoes,
+    input_consumo_Lanches,
+    input_Smoke,
+    input_agua,
+    input_calorica,
+    input_atividade,
+    input_tempo_eletronico,
+    input_Bebidas,
+    input_transporte
+]
