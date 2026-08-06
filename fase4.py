@@ -10,6 +10,9 @@ Original file is located at
 Primeiramente, vamos importar as bibliotecas necessárias para nossa análise.
 """
 
+import sys
+print(sys.version)
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -19,34 +22,34 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 #!pip install streamlit
-import streamlit as st
+#import streamlit as st
 
-import yfinance as yf
+#import yfinance as yf
 
-st.set_page_config(
-    page_title="Painel da B3",
-    layout="wide",
-)
+#st.set_page_config(
+#    page_title="Painel da B3",
+#    layout="wide",
+#)
 
-st.header("**PAINEL DE PREÇOS E DIVIDENDOS DA BOLSA DE VALORES**")
+#st.header("**PAINEL DE PREÇOS E DIVIDENDOS DA BOLSA DE VALORES**")
 
-ticker = st.text_input("Digite o ticker da ação:", "PETR4")
-empresa = yf.Ticker(f"{ticker}.SA")
+#ticker = st.text_input("Digite o ticker da ação:", "PETR4")
+#empresa = yf.Ticker(f"{ticker}.SA")
 
-tickerDF = empresa.history(
-    start="2026-06-01",
-    end="2026-06-30"
-)
+#tickerDF = empresa.history(
+#    start="2026-06-01",
+#    end="2026-06-30"
+#)
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.write(f"**Empresa** {empresa.info['longName']}")
-with col2:
-    st.write(f"**Setor** {empresa.info['sector']}")
-with col3:
-    st.write(f"**Preço Atual** {empresa.info['currentPrice']}")
+#col1, col2, col3 = st.columns(3)
+#with col1:
+#    st.write(f"**Empresa** {empresa.info['longName']}")
+#with col2:
+#    st.write(f"**Setor** {empresa.info['sector']}")
+#with col3:
+#    st.write(f"**Preço Atual** {empresa.info['currentPrice']}")
 
-st.line_chart(tickerDF['Close'])
+#st.line_chart(tickerDF['Close'])
 
 
 
@@ -55,13 +58,14 @@ Usaremos o conjunto de dados "Obesity.csv", que contém características de pess
 
 """
 
-from google.colab import files
+#from google.colab import files
 
 # upload
-arquivos = files.upload()
+#arquivos = files.upload()
 
 # carregar
-obesity = pd.read_csv('Obesity.csv', sep=',')
+#obesity = pd.read_csv('Obesity-formatado-LIMPO.csv', sep=',')
+obesity = pd.read_csv('https://raw.githubusercontent.com/MonicaFMK/FIAP-Fase4/refs/heads/main/Obesity-formatado-LIMPO.csv', sep=',')
 
 # criar classificação
 X = obesity.drop('Obesity', axis=1)
@@ -77,8 +81,8 @@ Vamos dar uma olhada nas primeiras linhas do conjunto de dados e entender suas c
 
 #df = pd.DataFrame(X, columns=wine.feature_names)
 #df['target'] = y
-df = pd.read_csv('Obesity.csv', sep=',')
-df.head()
+#df = pd.read_csv('Obesity-formatado-LIMPO.csv', sep=',')
+obesity.head()
 
 X.head()
 
@@ -88,7 +92,7 @@ y.head()
 Dividimos os dados em conjuntos de treinamento e teste.
 """
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=123)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=123, stratify=y)
 
 """Normalizamos os dados para melhorar o desempenho de alguns algoritmos.
 
@@ -140,9 +144,14 @@ y_pred_logreg = logreg.predict(X_test)
 
 """
 
-from sklearn.tree import DecisionTreeClassifier
+#from sklearn.tree import DecisionTreeClassifier
+#tree = DecisionTreeClassifier()
+#tree.fit(X_train, y_train)
+#y_pred_tree = tree.predict(X_test)
 
-tree = DecisionTreeClassifier()
+
+from sklearn.tree import DecisionTreeClassifier
+tree = DecisionTreeClassifier(random_state=123)
 tree.fit(X_train, y_train)
 y_pred_tree = tree.predict(X_test)
 
@@ -188,20 +197,19 @@ avaliar_modelo(y_test, y_pred_tree, "Árvore de Decisão")
 avaliar_modelo(y_test, y_pred_forest, "Random Forest")
 avaliar_modelo(y_test, y_pred_svm, "Support Vector Machine")
 
-"""# 7. Conclusão
-Comparamos vários modelos de classificação e observamos suas performances no conjunto de dados de vinhos. Cada modelo tem suas vantagens e pode ser mais adequado dependendo do contexto.
+import joblib
+artefatos_modelo={
+    "modelo": tree,
+    "scaler": scaler,
+    "colunas_modelo": X_train_encoded.columns.tolist(),
+    "colunas_categoricas": categorical_cols.tolist()
+}
 
-# 8. Exercícios
-Agora é a sua vez! Realize as seguintes atividades e observe os resultados:
+joblib.dump(
+    artefatos_modelo, "modelo_arvore_obesidade.pkl"
+)
 
-1. Altere o tamanho do conjunto de teste: Modifique o parâmetro test_size para 0.2 na função train_test_split e reavalie os modelos. Como isso afeta a acurácia?
+print ("Modelo salvo com sucesso!")
 
-2. Experimente diferentes valores de k no KNN: Altere o valor de n_neighbors para 3 e 7 no modelo KNN. Qual valor produz a melhor acurácia?
-
-3. Remova a normalização dos dados: Comente ou remova as linhas onde aplicamos o StandardScaler e treine os modelos novamente. Quais modelos são mais afetados?
-
-4. Ajuste a profundidade máxima da Árvore de Decisão: Defina o parâmetro max_depth=3 no DecisionTreeClassifier. Isso melhora ou piora o desempenho?
-
-5. Use um kernel diferente no SVM: Altere o parâmetro kernel para 'linear' no modelo SVM. Compare os resultados com o kernel padrão.
-"""
-
+from google.colab import files
+files.download('modelo_arvore_obesidade.pkl')
