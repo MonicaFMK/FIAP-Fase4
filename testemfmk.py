@@ -258,3 +258,17 @@ st.bar_chart(
     x="Tipo de peso",
     y="Quantidade"
 )
+
+ticker = st.text_input("Digite o tipo de peso:", "Normal_Weight")
+
+col1, col2, col3 = st.columns(3)
+with col1:
+   st.write(f"**Idade** {novo_dado['Age'].iloc[0]}")
+with col2:
+    st.write(f"**Altura** {novo_dado['Height'].iloc[0]}")
+with col3:
+    st.write(f"**Peso** {novo_dado['Weight'].iloc[0]}")
+
+dados_filtrados = dados[dados['Obesity'] == ticker]
+st.write(f"Dados filtrados para '{ticker}':")
+st.dataframe(dados_filtrados)
