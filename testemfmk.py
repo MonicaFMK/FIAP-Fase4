@@ -52,6 +52,8 @@ st.set_page_config(
     layout="wide",
 )
 
+st.header("**DADOS OBESITY**")
+
 st.write('# DADOS OBESITY')
 
 st.write('### Gênero')
@@ -216,3 +218,43 @@ if st.button("Verificar classificação da obesidade"):
 
     with st.expander("Visualizar os dados enviados"):
         st.dataframe(novo_dado)
+
+#ticker = st.text_input("Digite o tipo de peso:", "Normal_Weight")
+
+#col1, col2, col3 = st.columns(3)
+#with col1:
+ #   st.write(f"**Empresa** {empresa.info['longName']}")
+#with col2:
+ #   st.write(f"**Setor** {empresa.info['sector']}")
+#with col3:
+  #  st.write(f"**Preço Atual** {empresa.info['currentPrice']}")
+
+#st.line_chart(tickerDF['Close'])
+
+# Criar gráfico com a distribuição das classes da base
+
+traducao_obesidade = {
+    "Insufficient_Weight": "Peso insuficiente",
+    "Normal_Weight": "Peso normal",
+    "Overweight_Level_I": "Sobrepeso nível I",
+    "Overweight_Level_II": "Sobrepeso nível II",
+    "Obesity_Type_I": "Obesidade tipo I",
+    "Obesity_Type_II": "Obesidade tipo II",
+    "Obesity_Type_III": "Obesidade tipo III"
+}
+
+st.write("### Distribuição dos tipos de peso na base de dados")
+
+distribuicao_obesidade = (
+    dados["Obesity"]
+    .map(traducao_obesidade)
+    .value_counts()
+    .rename_axis("Tipo de peso")
+    .reset_index(name="Quantidade")
+)
+
+st.bar_chart(
+    distribuicao_obesidade,
+    x="Tipo de peso",
+    y="Quantidade"
+)
