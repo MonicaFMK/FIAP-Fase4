@@ -342,7 +342,30 @@ comparacao_historico = comparacao_historico.rename(
 )
 
 # Exibir o gráfico
-st.bar_chart(
-    comparacao_historico,
+#st.bar_chart(
+#    comparacao_historico,
+#    use_container_width=True
+#)
+import altair as alt
+
+comparacao_grafico = (
+    comparacao_historico
+    .reset_index()
+    .melt(
+        id_vars="Obesity",
+        var_name="Histórico familiar",
+        value_name="Quantidade"
+    )
+)
+
+grafico = alt.Chart(comparacao_grafico).mark_bar(size=10).encode(
+    x=alt.X("Obesity:N", title="Tipo de obesidade"),
+    y=alt.Y("Quantidade:Q", title="Quantidade"),
+    color=alt.Color("Histórico familiar:N"),
+    xOffset="Histórico familiar:N"
+)
+
+st.altair_chart(
+    grafico,
     use_container_width=True
 )
