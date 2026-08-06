@@ -307,3 +307,42 @@ st.bar_chart(
     y="Quantidade",
     use_container_width=True
 )
+
+st.write("### Comparação dos tipos de obesidade por histórico familiar")
+
+# Tradução das classificações
+traducao_obesidade = {
+    "Insufficient_Weight": "Peso insuficiente",
+    "Normal_Weight": "Peso normal",
+    "Overweight_Level_I": "Sobrepeso nível I",
+    "Overweight_Level_II": "Sobrepeso nível II",
+    "Obesity_Type_I": "Obesidade tipo I",
+    "Obesity_Type_II": "Obesidade tipo II",
+    "Obesity_Type_III": "Obesidade tipo III"
+}
+
+# Contar cada tipo de obesidade, separando yes e no
+comparacao_historico = pd.crosstab(
+    dados["Obesity"],
+    dados["family_history"]
+)
+
+# Traduzir os nomes dos tipos de obesidade
+comparacao_historico.index = (
+    comparacao_historico.index
+    .map(traducao_obesidade)
+)
+
+# Trocar os nomes das colunas para português
+comparacao_historico = comparacao_historico.rename(
+    columns={
+        "yes": "Sim",
+        "no": "Não"
+    }
+)
+
+# Exibir o gráfico
+st.bar_chart(
+    comparacao_historico,
+    use_container_width=True
+)
