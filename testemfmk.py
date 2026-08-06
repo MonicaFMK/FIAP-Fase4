@@ -272,3 +272,38 @@ with col3:
 dados_filtrados = dados[dados['Obesity'] == ticker]
 st.write(f"Dados filtrados para '{ticker}':")
 st.dataframe(dados_filtrados)
+
+st.write("### Tipos de obesidade em pessoas com histórico familiar")
+
+# Tradução dos nomes das classes
+traducao_obesidade = {
+    "Insufficient_Weight": "Peso insuficiente",
+    "Normal_Weight": "Peso normal",
+    "Overweight_Level_I": "Sobrepeso nível I",
+    "Overweight_Level_II": "Sobrepeso nível II",
+    "Obesity_Type_I": "Obesidade tipo I",
+    "Obesity_Type_II": "Obesidade tipo II",
+    "Obesity_Type_III": "Obesidade tipo III"
+}
+
+# Filtrar apenas quem possui histórico familiar
+dados_historico_sim = dados[
+    dados["family_history"] == "yes"
+].copy()
+
+# Traduzir e contar os tipos de obesidade
+grafico_historico = (
+    dados_historico_sim["Obesity"]
+    .map(traducao_obesidade)
+    .value_counts()
+    .rename_axis("Tipo de obesidade")
+    .reset_index(name="Quantidade")
+)
+
+# Mostrar o gráfico
+st.bar_chart(
+    grafico_historico,
+    x="Tipo de obesidade",
+    y="Quantidade",
+    use_container_width=True
+)
