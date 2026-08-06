@@ -47,6 +47,11 @@ modelo, scaler, colunas_modelo, colunas_categoricas = carregar_modelo()
 
 dados = pd.read_csv('https://raw.githubusercontent.com/MonicaFMK/FIAP-Fase4/refs/heads/main/Obesity-formatado-LIMPO.csv')
 
+st.set_page_config(
+    page_title="DADOS OBESITY",
+    layout="wide",
+)
+
 st.write('# DADOS OBESITY')
 
 st.write('### Gênero')
@@ -86,7 +91,7 @@ input_Lanches = st.radio('Consumo de lanches/comes entre as refeições', ['não
 input_consumo_Lanches_dict = {'não consome':'no','às vezes':'Sometimes','frequentemente':'Frequently','sempre':'Always'}
 input_consumo_Lanches = input_consumo_Lanches_dict.get(input_Lanches)
 
-st.write('### Smoke')
+st.write('### Cigarro')
 input_Smoke = st.radio('Hábito de fumar?', ['Sim','Não'])
 input_Smoke_dict = {'Sim':'yes','Não':'no'}
 input_Smoke = input_Smoke_dict.get(input_Smoke)
