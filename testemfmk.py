@@ -11,13 +11,48 @@ Original file is located at
 
 import streamlit as st
 import pandas as pd
+import joblib
+
+import requests
+import tempfile
+import os
+
+@st.cache_resource
+def carregar_modelo():
+    # URL do arquivo no GitHub
+    file_url = "https://github.com/MonicaFMK/FIAP-Fase4/blob/main/modelo_arvore_obesidade.pkl?raw=true"
+
+    # Crie um arquivo temporário para salvar o modelo
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.pkl') as tmp_file:
+        response = requests.get(file_url)
+        response.raise_for_status() # Levanta um erro para códigos de status HTTP ruins
+        tmp_file.write(response.content)
+        tmp_file_path = tmp_file.name
+
+    try:
+        artefatos = joblib.load(tmp_file_path)
+    finally:
+        # Limpa o arquivo temporário após o uso
+        os.remove(tmp_file_path)
+
+    modelo = artefatos["modelo"]
+    scaler = artefatos["scaler"]
+    colunas_modelo = artefatos["colunas_modelo"]
+    colunas_categoricas = artefatos["colunas_categoricas"]
+
+    return modelo, scaler, colunas_modelo, colunas_categoricas
+
+
+modelo, scaler, colunas_modelo, colunas_categoricas = carregar_modelo()
 
 dados = pd.read_csv('https://raw.githubusercontent.com/MonicaFMK/FIAP-Fase4/refs/heads/main/Obesity-formatado-LIMPO.csv')
 
 st.write('# DADOS OBESITY')
 
 st.write('### Gênero')
-input_genero = st.selectbox('Qual o gênero?',dados['Gender'].unique())
+input_genero = st.radio('Qual o gênero?', ['Feminino','Masculino'])
+input_genero_dict = {'Feminino':'Female','Masculino':'Male'}
+input_genero = input_genero_dict.get(input_genero)
 
 st.write('### Idade')
 input_idade = float(st.slider('Selecione a idade',14,100))
@@ -65,7 +100,7 @@ input_calorica_dict = {'Sim':'yes','Não':'no'}
 input_calorica = input_calorica_dict.get(input_calorica)
 
 st.write('### Atividade física')
-input_atividade = st.radio('Frequência semanal de atividade física', ['nenhuma','1–2×/sem','3–4×/sem',' 5×/sem ou mais'])
+input_atividade = st.radio('Frequência semanal de atividade física', ['nenhuma','1–2×/sem','3–4×/sem','5×/sem ou mais'])
 input_atividade_dict = {'nenhuma':0,'1–2×/sem':1,'3–4×/sem':2,'5×/sem ou mais':3}
 input_atividade = input_atividade_dict.get(input_atividade)
 
@@ -84,21 +119,95 @@ input_transporte = st.radio('Meio de transporte habitual', ['carro','moto','bici
 input_transporte_dict = {'carro':'Automobile','moto':'Motorbike','bicicleta':'Bike','transporte público':'Public_Transportation','a pé':'Walking'}
 input_transporte = input_transporte_dict.get(input_transporte)
 
-novo_dado = [
-    input_genero,
-    input_idade,
-    input_altura,
-    input_peso,
-    input_historico_familiar,
-    input_consumo_calorico,
-    input_consumo_vegetais,
-    input_refeicoes,
-    input_consumo_Lanches,
-    input_Smoke,
-    input_agua,
-    input_calorica,
-    input_atividade,
-    input_tempo_eletronico,
-    input_Bebidas,
-    input_transporte
-]
+from numpy import test
+novo_dado = pd.DataFrame(
+    [{
+        "Gender": input_genero,
+        "Age": input_idade,
+        "Height": input_altura,
+        "Weight": input_peso,
+        "family_history": input_historico_familiar,
+        "FAVC": input_consumo_calorico,
+        "FCVC": input_consumo_vegetais,
+        "NCP": input_refeicoes,
+        "CAEC": input_consumo_Lanches,
+        "SMOKE": input_Smoke,
+        "CH2O": input_agua,
+        "SCC": input_calorica,
+        "FAF": input_atividade,
+        "TUE": input_tempo_eletronico,
+        "CALC": input_Bebidas,
+        "MTRANS": input_transporte
+    }]
+)
+
+#def data_split(df, test_size):
+#    SEED=1561651
+#    treino_df, teste_df = train_test_split(df, test_size=test_size, random_state=SEED)
+#    return treino_df.reset_index(drop=True), teste_df.reset_index(drop=True)
+
+#from sklearn.model_selection import train_test_split
+#treino_df, teste_df = data_split(dados, 0.2)
+
+#novo_dado_predict_df = pd.DataFrame([novo_dado], columns=teste_df.columns)
+
+#teste_novo_dado = pd.concat([teste_df, novo_dado_predict_df])
+
+#from sklearn.pipeline import Pipeline
+
+#def pipeline_teste (df):
+#    pipeline = Pipeline([
+#        ('feature_dropper',DropFeatures()),
+ #       ('OneHotEncoding',OneHotEncodingNames()),
+ #       ('ordinal_feature',OrdinalFeature()),
+ #       ('min_max_scaler',MinMaxWithFeatNames()),
+ #   ])
+ #   df_pipeline = pipeline.fit_transform(df)
+ #   return df_pipeline
+
+#teste_novo_dado = pipeline_teste(teste_novo_dado)
+
+#teste_novo_dado = pipeline_teste(teste_novo_dado)
+
+#novo_dado_pred = teste_novo_dado.drop(['Obesity'], axis=1)
+
+if st.button("Verificar classificação da obesidade"):
+
+    # Converter as variáveis categóricas em colunas numéricas
+    novo_dado_encoded = pd.get_dummies(
+        novo_dado,
+        columns=colunas_categoricas,
+        dtype=int
+    )
+
+    # Garantir as mesmas colunas e a mesma ordem usadas no treinamento
+    novo_dado_encoded = novo_dado_encoded.reindex(
+        columns=colunas_modelo,
+        fill_value=0
+    )
+
+    # Aplicar o mesmo StandardScaler usado no treinamento
+    novo_dado_scaled = scaler.transform(novo_dado_encoded)
+
+    # Realizar a previsão
+    previsao = modelo.predict(novo_dado_scaled)[0]
+
+    # Traduzir o resultado
+    traducao_obesidade = {
+        "Insufficient_Weight": "Peso insuficiente",
+        "Normal_Weight": "Peso normal",
+        "Overweight_Level_I": "Sobrepeso nível I",
+        "Overweight_Level_II": "Sobrepeso nível II",
+        "Obesity_Type_I": "Obesidade tipo I",
+        "Obesity_Type_II": "Obesidade tipo II",
+        "Obesity_Type_III": "Obesidade tipo III"
+    }
+
+    resultado = traducao_obesidade.get(previsao, previsao)
+
+    st.success(
+        f"Classificação prevista pelo modelo: **{resultado}**"
+    )
+
+    with st.expander("Visualizar os dados enviados"):
+        st.dataframe(novo_dado)
