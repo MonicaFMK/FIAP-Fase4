@@ -369,3 +369,166 @@ st.altair_chart(
     grafico,
     use_container_width=True
 )
+
+## Definição
+
+traducao_obesidade = {
+    "Insufficient_Weight": "Peso insuficiente",
+    "Normal_Weight": "Peso normal",
+    "Overweight_Level_I": "Sobrepeso nível I",
+    "Overweight_Level_II": "Sobrepeso nível II",
+    "Obesity_Type_I": "Obesidade tipo I",
+    "Obesity_Type_II": "Obesidade tipo II",
+    "Obesity_Type_III": "Obesidade tipo III"
+}
+
+dados_grafico = dados.copy()
+
+dados_grafico["Obesity"] = (
+    dados_grafico["Obesity"]
+    .map(traducao_obesidade)
+)
+
+## Gráfico: Obesidade × alimentação
+
+st.write("## Obesidade e hábitos alimentares")
+
+aba1, aba2, aba3 = st.tabs([
+    "Consumo calórico",
+    "Refeições por dia",
+    "Lanches"
+])
+
+## consumo de alimentos muito calóricos
+
+with aba1:
+
+    st.write(
+        "### Consumo frequente de alimentos muito calóricos"
+    )
+
+    grafico_favc = pd.crosstab(
+        dados_grafico["Obesity"],
+        dados_grafico["FAVC"],
+        normalize="index"
+    ) * 100
+
+    grafico_favc = grafico_favc.rename(
+        columns={
+            "yes": "Sim",
+            "no": "Não"
+        }
+    )
+
+    st.bar_chart(
+        grafico_favc,
+        use_container_width=True
+    )
+
+## número de refeições por dia
+
+with aba2:
+
+    st.write(
+        "### Número de refeições principais por dia"
+    )
+
+    grafico_ncp = pd.crosstab(
+        dados_grafico["Obesity"],
+        dados_grafico["NCP"]
+    )
+
+    grafico_ncp.columns = [
+        f"{col} refeições"
+        for col in grafico_ncp.columns
+    ]
+
+    st.bar_chart(
+        grafico_ncp,
+        use_container_width=True
+    )
+
+## lanches entre refeições
+
+with aba3:
+
+    st.write(
+        "### Consumo de alimentos entre as refeições"
+    )
+
+    grafico_caec = pd.crosstab(
+        dados_grafico["Obesity"],
+        dados_grafico["CAEC"]
+    )
+
+    grafico_caec = grafico_caec.rename(
+        columns={
+            "no": "Não consome",
+            "Sometimes": "Às vezes",
+            "Frequently": "Frequentemente",
+            "Always": "Sempre"
+        }
+    )
+
+    st.bar_chart(
+        grafico_caec,
+        use_container_width=True
+    )
+
+## Obesidade × atividade física
+
+st.write("## Obesidade e atividade física")
+
+grafico_faf = pd.crosstab(
+    dados_grafico["Obesity"],
+    dados_grafico["FAF"]
+)
+
+grafico_faf = grafico_faf.rename(
+    columns={
+        0: "Nenhuma",
+        1: "1 a 2 vezes/semana",
+        2: "3 a 4 vezes/semana",
+        3: "5 ou mais vezes/semana"
+    }
+)
+
+st.bar_chart(
+    grafico_faf,
+    use_container_width=True
+)
+
+## Obesidade × faixa etária
+
+dados_grafico["Faixa etária"] = pd.cut(
+    dados_grafico["Age"],
+    bins=[
+        0,
+        20,
+        30,
+        40,
+        50,
+        60,
+        200
+    ],
+    labels=[
+        "Até 20 anos",
+        "21 a 30 anos",
+        "31 a 40 anos",
+        "41 a 50 anos",
+        "51 a 60 anos",
+        "Acima de 60 anos"
+    ]
+)
+
+st.write("## Obesidade por faixa etária")
+
+grafico_idade = pd.crosstab(
+    dados_grafico["Obesity"],
+    dados_grafico["Faixa etária"]
+)
+
+st.bar_chart(
+    grafico_idade,
+    use_container_width=True
+)
