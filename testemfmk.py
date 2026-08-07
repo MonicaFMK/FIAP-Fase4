@@ -532,3 +532,48 @@ st.bar_chart(
     grafico_idade,
     use_container_width=True
 )
+
+### Perfil combinado dos indivíduos com obesidade
+
+st.write(
+    "## Obesidade entre pessoas de 21 a 30 anos, "
+    "com histórico familiar e sem atividade física"
+)
+
+perfil_obesidade = dados[
+    (dados["Age"] >= 21) &
+    (dados["Age"] <= 30) &
+    (dados["family_history"] == "yes") &
+    (dados["FAF"] == 0) &
+    (
+        dados["Obesity"].isin([
+            "Obesity_Type_I",
+            "Obesity_Type_II",
+            "Obesity_Type_III"
+        ])
+    )
+]
+
+resultado_perfil = (
+    perfil_obesidade["Obesity"]
+    .value_counts()
+    .rename_axis("Tipo de obesidade")
+    .reset_index(name="Quantidade")
+)
+
+traducao_obesidade = {
+    "Obesity_Type_I": "Obesidade tipo I",
+    "Obesity_Type_II": "Obesidade tipo II",
+    "Obesity_Type_III": "Obesidade tipo III"
+}
+
+resultado_perfil["Tipo de obesidade"] = (
+    resultado_perfil["Tipo de obesidade"]
+    .map(traducao_obesidade)
+)
+
+st.bar_chart(
+    resultado_perfil,
+    x="Tipo de obesidade",
+    y="Quantidade"
+)
