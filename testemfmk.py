@@ -259,6 +259,23 @@ st.bar_chart(
     y="Quantidade"
 )
 
+# Calcular percentual
+total = distribuicao_obesidade["Quantidade"].sum()
+
+distribuicao_obesidade["Percentual"] = (
+    distribuicao_obesidade["Quantidade"] / total * 100
+)
+
+# Mostrar legenda com percentuais
+st.write("**Percentual por tipo de peso:**")
+
+for _, linha in distribuicao_obesidade.iterrows():
+    st.write(
+        f"• {linha['Tipo de peso']}: "
+        f"{linha['Quantidade']} pessoas "
+        f"({linha['Percentual']:.1f}%)"
+    )
+
 #ticker = st.text_input("Digite o tipo de peso:", "Normal_Weight")
 
 #col1, col2, col3 = st.columns(3)
