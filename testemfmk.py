@@ -233,21 +233,21 @@ if st.button("Verificar classificação da obesidade"):
 
 # Criar gráfico com a distribuição das classes da base
 
-traducao_obesidade = {
+st.write("### Distribuição dos tipos de peso na base de dados")
+
+agrupamento_peso = {
     "Insufficient_Weight": "Peso insuficiente",
     "Normal_Weight": "Peso normal",
-    "Overweight_Level_I": "Sobrepeso nível I",
-    "Overweight_Level_II": "Sobrepeso nível II",
-    "Obesity_Type_I": "Obesidade tipo I",
-    "Obesity_Type_II": "Obesidade tipo II",
-    "Obesity_Type_III": "Obesidade tipo III"
+    "Overweight_Level_I": "Sobrepeso",
+    "Overweight_Level_II": "Sobrepeso",
+    "Obesity_Type_I": "Obesidade",
+    "Obesity_Type_II": "Obesidade",
+    "Obesity_Type_III": "Obesidade"
 }
-
-st.write("### Distribuição dos tipos de peso na base de dados")
 
 distribuicao_obesidade = (
     dados["Obesity"]
-    .map(traducao_obesidade)
+    .map(agrupamento_peso)
     .value_counts()
     .rename_axis("Tipo de peso")
     .reset_index(name="Quantidade")
@@ -259,19 +259,19 @@ st.bar_chart(
     y="Quantidade"
 )
 
-ticker = st.text_input("Digite o tipo de peso:", "Normal_Weight")
+#ticker = st.text_input("Digite o tipo de peso:", "Normal_Weight")
 
-col1, col2, col3 = st.columns(3)
-with col1:
-   st.write(f"**Idade** {novo_dado['Age'].iloc[0]}")
-with col2:
-    st.write(f"**Altura** {novo_dado['Height'].iloc[0]}")
-with col3:
-    st.write(f"**Peso** {novo_dado['Weight'].iloc[0]}")
+#col1, col2, col3 = st.columns(3)
+#with col1:
+#  st.write(f"**Idade** {novo_dado['Age'].iloc[0]}")
+#with col2:
+ #   st.write(f"**Altura** {novo_dado['Height'].iloc[0]}")
+#with col3:
+#    st.write(f"**Peso** {novo_dado['Weight'].iloc[0]}")
 
-dados_filtrados = dados[dados['Obesity'] == ticker]
-st.write(f"Dados filtrados para '{ticker}':")
-st.dataframe(dados_filtrados)
+#dados_filtrados = dados[dados['Obesity'] == ticker]
+#st.write(f"Dados filtrados para '{ticker}':")
+#st.dataframe(dados_filtrados)
 
 st.write("### Tipos de obesidade em pessoas com histórico familiar")
 
